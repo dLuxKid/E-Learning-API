@@ -33,6 +33,44 @@ export const getCourses = catchAsyncError(
   }
 );
 
+export const createCourse = catchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const user_id = (req as any).identity.id;
+
+    const {
+      title,
+      description,
+      duration,
+      availability,
+      category,
+      level,
+      prerequisites,
+      thumbnail,
+      tags,
+      lessons,
+    } = req.body;
+
+    const course = await courseModel.create({
+      title,
+      description,
+      duration,
+      availability,
+      category,
+      level,
+      prerequisites,
+      thumbnail,
+      tags,
+      lessons,
+      instructor: user_id,
+    });
+
+    res.status(201).json({
+      status: "success",
+      data: { course },
+    });
+  }
+);
+
 export const getMyCourses = catchAsyncError(
   async (req: Request, res: Response) => {
     const user_id = (req as any).identity.id;

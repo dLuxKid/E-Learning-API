@@ -85,23 +85,22 @@ export const isAuthenticated = catchAsyncError(
 
 export const handleMediaUpload = catchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
-    if (req.body.banner_picture || req.body.profile_picture) {
-      const bannerPictureUrl = req.body.banner_picture
-        ? await uploadMedia(req.body.banner_picture)
-        : undefined;
-      const profilePictureUrl = req.body.profile_picture
-        ? await uploadMedia(req.body.profile_picture)
-        : undefined;
-      req.body.banner_picture = bannerPictureUrl;
-      req.body.profile_picture = profilePictureUrl;
-    } else if (req.body.media) {
-      const uploadedMedia: any[] = await Promise.all(
-        req.body.media.map(
-          async (mediaUrl: string) => await uploadMedia(mediaUrl)
-        )
-      );
-
-      req.body.media = uploadedMedia;
+    if (req.body.profile_picture)
+      req.body.profile_picture = await uploadMedia(req.body.profile_picture);
+    else if (
+      req.body.thumbnail &&
+      !req.body.thumbnail.startsWith("https://res.cloudinary.com/")
+    )
+      req.body.thumbnail = await uploadMedia(req.body.thumbnail);
+    else if (req.body.lessons.length) {
+      req.body.lessons.map(async (lesson) => {
+        if (!lesson.thumbnail.startsWith("https://res.cloudinary.com/"))
+          lesson.thumbnail = await uploadMedia(lesson.thumbnail);
+      });
+      req.body.lessons.map(async (lesson) => {
+        if (!lesson.video.startsWith("https://res.cloudinary.com/"))
+          lesson.video = await uploadMedia(lesson.video);
+      });
     }
 
     next();

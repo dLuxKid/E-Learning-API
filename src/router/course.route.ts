@@ -1,5 +1,6 @@
 import type { Router } from "express";
 import {
+  createCourse,
   enrollInCourse,
   getCourse,
   getCourses,
@@ -8,7 +9,7 @@ import {
   updateCourse,
   updateProgress,
 } from "../controllers/course.controller";
-import { protectRoute, restrictTo } from "../middlewares";
+import { handleMediaUpload, protectRoute, restrictTo } from "../middlewares";
 
 export default (router: Router) => {
   router.get("/course/get-all-courses", getCourses);
@@ -31,6 +32,13 @@ export default (router: Router) => {
     restrictTo("student"),
     requestCertificate
   );
+  router.post(
+    "/course/create-course",
+    protectRoute,
+    restrictTo("instructor"),
+    handleMediaUpload,
+    createCourse
+  );
   router.post("/course/enroll/:course_id", protectRoute, enrollInCourse);
   router.post(
     "/course/update-progress/:course_id",
@@ -38,9 +46,10 @@ export default (router: Router) => {
     updateProgress
   );
   router.patch(
-    "/course/update-progress/:course_id",
+    "/course/update-course/:course_id",
     protectRoute,
     restrictTo("instructor"),
+    handleMediaUpload,
     updateCourse
   );
 };
