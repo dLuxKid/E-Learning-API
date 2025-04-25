@@ -16,7 +16,7 @@ export default (router: Router) => {
     updateReview
   );
   router.delete(
-    "/review/review-course/:course_id",
+    "/review/delete-review/:course_id",
     protectRoute,
     restrictTo("student"),
     reviewCourse
