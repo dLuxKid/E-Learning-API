@@ -1,4 +1,4 @@
-import e, { NextFunction, Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import courseModel from "../models/course.model";
 import enrolledModel from "../models/enrolled.model";
 import AppError from "../utils/error-handlers/app-error";

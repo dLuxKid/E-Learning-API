@@ -73,7 +73,7 @@ export const deleteExam = catchAsyncError(
       user: user_id,
     });
 
-    res.status(201).json({
+    res.status(204).json({
       status: "success",
       message: "Exam deleted successfully",
     });
@@ -112,7 +112,7 @@ export const submitExam = catchAsyncError(
 
     await enrolledCourse.save();
 
-    res.status(200).json({
+    res.status(201).json({
       status: "success",
       data: { score, exam, answers },
     });
